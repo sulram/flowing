@@ -8,8 +8,6 @@ function editorView (state, emit) {
     return html`
         <svg
             id="riven"
-            height="100%"
-            width="100%"
             ondblclick="${onDblClick}"
             onmousemove="${onMouseMove}"
             onmousedown="${onMouseDown}"
