@@ -1,0 +1,17 @@
+{
+  "name": "flowing",
+  "version": "1.0.0",
+  "description": "flow ❤️ interactive node graph",
+  "main": "index.js",
+  "scripts": {
+    "start": "budo index.js:bundle.js --port ${PORT:-8080} --live"
+  },
+  "author": "Marlus Araujo",
+  "license": "MIT",
+  "devDependencies": {
+    "budo": "^11.6.3"
+  },
+  "dependencies": {
+    "choo": "^7.1.0"
+  }
+}
