@@ -1,6 +1,6 @@
 var html = require('choo/html')
 
-function nodeView (node, emit) {
+module.exports = (node, emit) => {
     return html`
         <g
             class="node"
@@ -19,21 +19,21 @@ function nodeView (node, emit) {
     `
     function onClick(e) {
         e.stopPropagation()
-        emit('onNodeClick', node.id)
+        emit('node:click', node.id)
     }
 
     function onSelect(e) {
         e.stopPropagation()
-        emit('onNodeSelect', node.id)
+        emit('node:select', node.id)
     }
 
     function onRelease(e) {
-        emit('onNodeRelease', node.id)
+        e.stopPropagation()
+        emit('node:release', node.id)
     }
 
     function onDblClick(e) {
         e.stopPropagation()
+        emit('node:dblclick', node.id)
     }
 }
-
-module.exports = nodeView

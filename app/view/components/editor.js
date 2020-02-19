@@ -1,9 +1,10 @@
 var html = require('choo/html')
-
-// import components
 var node = require('./node')
 
-function editorView (state, emit) {
+module.exports =  (state, emit) => {
+
+    const nodes = state.graph.nodes.map((s) => node(s, emit))
+    const {x,y} = state.graph.offset
 
     return html`
         <svg
@@ -13,34 +14,26 @@ function editorView (state, emit) {
             onmousedown="${onMouseDown}"
             onmouseup="${onMouseUp}"
         >
-            <g id="viewport" style="transform: translate(${state.canvas.x}px,${state.canvas.y}px)">
+            <g id="viewport" style="transform: translate(${x}px,${y}px)">
                 <g id="edges"></g>
-                <g id="nodes">
-                    ${state.nodes.map(nodesMap)}
-                </g>
+                <g id="nodes">${nodes}</g>
             </g>
         </svg>
     `
 
-    function nodesMap(obj, i) {
-        return node(obj, emit)
-    }
-
     function onDblClick (e) {
-        emit('onEditorDblClick', e)
+        emit('editor:dblclick', e)
     }
 
     function onMouseMove(e) {
-        emit('onEditorMouseMove', e)
+        emit('editor:mousemove', e)
     }
 
     function onMouseDown(e) {
-        emit('onEditorMouseDown', e)
+        emit('editor:mousedown', e)
     }
 
     function onMouseUp(e) {
-        emit('onEditorMouseUp', e)
+        emit('editor:mouseup', e)
     }
 }
-
-module.exports = editorView

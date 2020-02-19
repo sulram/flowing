@@ -1,16 +1,16 @@
 module.exports = (state, emitter) => {
 
-    emitter.on('clickSVG', function (svg) {
+    emitter.on('node:click', function (svg) {
         console.log(svg)
         emitter.emit('render')
     })
 
-    emitter.on('onNodeSelect', function (id) {
-        console.log('onNodeSelect', id)
+    emitter.on('node:select', function (id) {
+        console.log('node:select', id)
     })
 
-    emitter.on('onNodeRelease', function (id) {
-        console.log('onNodeRelease', id)
+    emitter.on('node:release', function (id) {
+        console.log('node:release', id)
     })
     
 }
