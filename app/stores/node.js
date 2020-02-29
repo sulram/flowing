@@ -1,15 +1,15 @@
-module.exports = (state, emitter) => {
+module.exports = (state, bus) => {
 
-    emitter.on('node:click', function (svg) {
+    bus.on('node:click', svg => {
         console.log(svg)
-        emitter.emit('render')
+        bus.emit('render')
     })
 
-    emitter.on('node:select', function (id) {
+    bus.on('node:select', id => {
         console.log('node:select', id)
     })
 
-    emitter.on('node:release', function (id) {
+    bus.on('node:release', id => {
         console.log('node:release', id)
     })
     

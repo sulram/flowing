@@ -3,7 +3,7 @@ var node = require('./node')
 
 module.exports =  (state, emit) => {
 
-    const nodes = state.graph.nodes.map((s) => node(s, emit))
+    const nodes = state.graph.nodes.map(nState => node(nState, emit))
     const [x,y] = state.graph.offset
 
     return html`

@@ -1,7 +1,7 @@
 const vec = require('vec-la')
 const mtx = vec.matrixBuilder()
 
-module.exports = (state, emitter) => {
+module.exports = (state, bus) => {
 
     // initial state
     state.graph = {
@@ -13,14 +13,14 @@ module.exports = (state, emitter) => {
     }
 
     // events
-    emitter.on('editor:dblclick',  (e) => update(e, createNode))
-    emitter.on('editor:mousemove', (e) => update(e, mouseMove))
-    emitter.on('editor:dragging',  (e) => update(e, dragState))
+    bus.on('editor:dblclick',  e => update(e, createNode))
+    bus.on('editor:mousemove', e => update(e, mouseMove))
+    bus.on('editor:dragging',  e => update(e, dragState))
 
-    function update(event, fn) {
-        // mutate and render
-        state.graph = fn(event, state.graph)
-        emitter.emit('render')
+    // side effects: mutate and render
+    function update(e, fn) {
+        state.graph = fn(e, state.graph)
+        bus.emit('render')
     }
     
     // generate ID
@@ -29,7 +29,7 @@ module.exports = (state, emitter) => {
     }
 
     // create a node
-    function createNode(event, graph) {
+    function createNode(e, graph) {
         const {mouse, offset, nodes} = graph
         const node = {
             id: idgen(),
