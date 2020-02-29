@@ -1,6 +1,6 @@
 # flowing
 
-A node graph editor for interactive fiction games, inspired by [Twine](https://twinery.org).
+A node graph editor for interactive fiction games, inspired by [Twine](https://twinery.org) and [Riven](https://github.com/XXIIVV/Riven).
 
 Also, an experiment to create this kind of interface in a functional way.
 
