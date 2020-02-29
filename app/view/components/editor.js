@@ -30,10 +30,10 @@ module.exports =  (state, emit) => {
     }
 
     function onMouseDown(e) {
-        emit('editor:mousedown', e)
+        emit('editor:dragging', {dragging: true})
     }
 
     function onMouseUp(e) {
-        emit('editor:mouseup', e)
+        emit('editor:dragging', {dragging: false})
     }
 }

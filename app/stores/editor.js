@@ -10,64 +10,56 @@ module.exports = (state, emitter) => {
     }
 
     // events
-    emitter.on('editor:dblclick', createNode)
-    emitter.on('editor:mousemove', mouseMove)
-    emitter.on('editor:mousedown', (e) => dragState(true))
-    emitter.on('editor:mouseup', (e) => dragState(false))
+    emitter.on('editor:dblclick',  (e) => update(e, createNode))
+    emitter.on('editor:mousemove', (e) => update(e, mouseMove))
+    emitter.on('editor:dragging',  (e) => update(e, dragState))
 
+    function update(event, fn) {
+        // mutate and render
+        state.graph = fn(event, state.graph)
+        emitter.emit('render')
+    }
+    
     // generate ID
     function idgen() {
         return (+new Date).toString(32)
     }
 
     // create a node
-    function createNode(e) {
-
-        const {mouse, offset, nodes} = state.graph
-
+    function createNode(event, graph) {
+        const {mouse, offset, nodes} = graph
         const node = {
             id: idgen(),
             x: mouse.x - offset.x - 20,
             y: mouse.y - offset.y - 20
         }
-
-        state.graph.nodes = [...nodes, node]
-
-        emitter.emit('render')
+        return {...graph, nodes: [...nodes, node]}
     }
 
     // on mouse move
-    function mouseMove(e) {
-
+    function mouseMove(e, graph) {
         const {x,y} = e
-        const {diff} = state.graph
+        const {diff} = graph
         const mouse = {x,y}
-
-        // if dragging
-        if(state.graph.dragging){
-            // update mouse and offset
-            const offset = {
-                x: x - diff.x,
-                y: y - diff.y
-            }
-            state.graph = {...state.graph, mouse, offset}
-            emitter.emit('render')
-        } else {
-            // update mouse
-            state.graph = {...state.graph, mouse}
+        const offset = {
+            x: x - diff.x,
+            y: y - diff.y
         }
+        // if dragging
+        return state.graph.dragging
+            ? {...graph, mouse, offset}
+            : {...graph, mouse}
     }
 
     // update drag state
-    function dragState(dragging) {
-        const {mouse, offset} = state.graph
+    function dragState(e, graph) {
+        const {mouse, offset} = graph
+        const {dragging} = e
         const diff = {
             x: mouse.x - offset.x,
             y: mouse.y - offset.y
         }
-        state.graph = {...state.graph, diff, dragging}
+        return {...graph, diff, dragging}
     }
 
-    
-    
 }
