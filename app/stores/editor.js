@@ -1,11 +1,14 @@
+const vec = require('vec-la')
+const mtx = vec.matrixBuilder()
+
 module.exports = (state, emitter) => {
 
     // initial state
     state.graph = {
         dragging: false,
-        mouse: {x: 0, y: 0},
-        offset: {x: 0, y: 0},
-        diff: {x: 0, y: 0},
+        mouse: [0,0],
+        offset: [0,0],
+        diff: [0,0],
         nodes: []
     }
 
@@ -30,8 +33,7 @@ module.exports = (state, emitter) => {
         const {mouse, offset, nodes} = graph
         const node = {
             id: idgen(),
-            x: mouse.x - offset.x - 20,
-            y: mouse.y - offset.y - 20
+            pos: vec.transform(vec.sub(mouse, offset), mtx.translate(-20, -20).get())
         }
         return {...graph, nodes: [...nodes, node]}
     }
@@ -39,12 +41,8 @@ module.exports = (state, emitter) => {
     // on mouse move
     function mouseMove(e, graph) {
         const {x,y} = e
-        const {diff} = graph
-        const mouse = {x,y}
-        const offset = {
-            x: x - diff.x,
-            y: y - diff.y
-        }
+        const mouse = [x,y]
+        const offset = vec.sub(mouse, graph.diff)
         // if dragging
         return state.graph.dragging
             ? {...graph, mouse, offset}
@@ -53,12 +51,8 @@ module.exports = (state, emitter) => {
 
     // update drag state
     function dragState(e, graph) {
-        const {mouse, offset} = graph
         const {dragging} = e
-        const diff = {
-            x: mouse.x - offset.x,
-            y: mouse.y - offset.y
-        }
+        const diff = vec.sub(graph.mouse, graph.offset)
         return {...graph, diff, dragging}
     }
 

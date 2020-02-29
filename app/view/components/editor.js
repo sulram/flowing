@@ -4,7 +4,7 @@ var node = require('./node')
 module.exports =  (state, emit) => {
 
     const nodes = state.graph.nodes.map((s) => node(s, emit))
-    const {x,y} = state.graph.offset
+    const [x,y] = state.graph.offset
 
     return html`
         <svg

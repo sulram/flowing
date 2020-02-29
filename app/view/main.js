@@ -3,7 +3,7 @@ const editor = require('./components/editor')
 
 module.exports = (state, emit) => {
 
-    const {x,y} = state.graph.offset
+    const [x,y] = state.graph.offset
     const lax = 0.5
 
     return html`

@@ -1,11 +1,14 @@
 var html = require('choo/html')
 
 module.exports = (node, emit) => {
+
+    const [x,y] = node.pos
+
     return html`
         <g
             class="node"
             id="${node.id}"
-            transform="translate(${node.x},${node.y})"
+            transform="translate(${x},${y})"
             ondblclick="${onDblClick}"
         >
             <rect rx="2" ry="2" width="40" height="40" class="fill"
