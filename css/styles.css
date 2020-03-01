@@ -2,10 +2,31 @@
 
 /* Riven override */
 
+svg#riven g#nodes g.node .glyph,
 svg#riven g#nodes g.node text {
     pointer-events: none;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+}
+
+svg#riven g#nodes g.node.node-selected rect { fill:white; cursor: hand; }
+svg#riven g#nodes g.node.node-selected path.glyph { stroke:#000; stroke-width:12; }
+
+svg#riven g#nodes g.node circle {
+    r: 40;
+    stroke-width: 1;
+    stroke: white;
+    fill: none;
+    opacity: 0;
+    transition: all 0.5s;
+    stroke-dasharray: 20,5;
+    stroke-dashoffset: 250;
+    animation: dash 20s linear infinite;
+}
+
+svg#riven g#nodes g.node.node-selected circle {
+    r: 80;
+    opacity: 1;
 }

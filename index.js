@@ -2,8 +2,7 @@
 var choo = require('choo')
 
 // models
-var editor = require('./app/stores/editor')
-var node = require('./app/stores/node')
+var graph = require('./app/stores/graph')
 
 // load main view
 var mainView = require('./app/view/main')
@@ -12,8 +11,7 @@ var mainView = require('./app/view/main')
 var app = choo()
 
 // app stores
-app.use(editor)
-app.use(node)
+app.use(graph)
 
 // create routes
 app.route('/', mainView)

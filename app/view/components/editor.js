@@ -3,13 +3,14 @@ var node = require('./node')
 
 module.exports =  (state, emit) => {
 
-    const nodes = state.graph.nodes.map(nState => node(nState, emit))
+    const nodes = state.graph.nodes.map(nState => node(state, nState, emit))
     const [x,y] = state.graph.offset
 
     return html`
         <svg
             id="riven"
             ondblclick="${onDblClick}"
+            onclick="${onClick}"
             onmousemove="${onMouseMove}"
             onmousedown="${onMouseDown}"
             onmouseup="${onMouseUp}"
@@ -25,15 +26,19 @@ module.exports =  (state, emit) => {
         emit('editor:dblclick', e)
     }
 
+    function onClick (e) {
+        emit('editor:click', e)
+    }
+
     function onMouseMove(e) {
         emit('editor:mousemove', e)
     }
 
     function onMouseDown(e) {
-        emit('editor:dragging', {dragging: true})
+        emit('editor:dragstate', {dragGraph: true})
     }
 
     function onMouseUp(e) {
-        emit('editor:dragging', {dragging: false})
+        emit('editor:dragstate', {dragGraph: false})
     }
 }
