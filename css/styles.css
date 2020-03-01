@@ -11,8 +11,17 @@ svg#riven g#nodes g.node text {
     user-select: none;
 }
 
-svg#riven g#nodes g.node.node-selected rect { fill:white; cursor: hand; }
-svg#riven g#nodes g.node.node-selected path.glyph { stroke:#000; stroke-width:12; }
+svg#riven g#nodes g.node.node-selected rect,
+svg#riven g#nodes g.node.node-dragged rect {
+    fill:white;
+    cursor: hand;
+}
+
+svg#riven g#nodes g.node.node-selected path.glyph,
+svg#riven g#nodes g.node.node-dragged path.glyph {
+    stroke:#000;
+    stroke-width:12;
+}
 
 svg#riven g#nodes g.node circle {
     r: 40;

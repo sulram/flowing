@@ -22,23 +22,23 @@ module.exports =  (state, emit) => {
         </svg>
     `
 
-    function onDblClick (e) {
-        emit('editor:dblclick', e)
+    function onDblClick (event) {
+        emit('editor:dblclick', {event})
     }
 
-    function onClick (e) {
-        emit('editor:click', e)
+    function onClick (event) {
+        emit('editor:click', {event})
     }
 
-    function onMouseMove(e) {
-        emit('editor:mousemove', e)
+    function onMouseMove(event) {
+        emit('editor:mousemove', {event})
     }
 
-    function onMouseDown(e) {
-        emit('editor:dragstate', {dragGraph: true})
+    function onMouseDown(event) {
+        emit('editor:dragstate', {event, dragGraph: true})
     }
 
-    function onMouseUp(e) {
-        emit('editor:dragstate', {dragGraph: false})
+    function onMouseUp(event) {
+        emit('editor:dragstate', {event, dragGraph: false})
     }
 }

@@ -18,17 +18,18 @@ module.exports = (state, bus) => {
     }
 
     // events
-    bus.on('editor:dblclick',  e => update(e, createNode))
-    bus.on('editor:mousemove', e => update(e, mouseMove))
-    bus.on('editor:dragstate', e => update(e, dragState))
-    bus.on('editor:click',     e => update(e, unselectAll))
-    bus.on('node:click',       e => update(e, selectNode))
-    bus.on('node:mousedown',   e => update(e, dragNode))
-    bus.on('node:mouseup',     e => update(e, releaseNode))
+    bus.on('editor:dblclick',  obj => update(obj, createNode))
+    bus.on('editor:mousemove', obj => update(obj, mouseMove))
+    bus.on('editor:dragstate', obj => update(obj, dragState))
+    bus.on('editor:click',     obj => update(obj, unselectAll))
+    bus.on('node:click',       obj => update(obj, selectNode))
+    bus.on('node:mousedown',   obj => update(obj, dragNode))
+    bus.on('node:mouseup',     obj => update(obj, releaseNode))
 
     // side effects: mutate and render
-    function update(e, fn) {
-        state.graph = fn(e, state.graph)
+    function update(obj, fn) {
+        //console.log('update', e.event.type, fn.name)
+        state.graph = fn(obj, state.graph)
         bus.emit('render')
     }
     
@@ -47,8 +48,8 @@ module.exports = (state, bus) => {
     // GRAPH
 
     // on mouse move
-    function mouseMove(e, graph) {
-        const {x,y} = e
+    function mouseMove(obj, graph) {
+        const {x,y} = obj.event
         const mouse = [x,y]
         const offset = vec.sub(mouse, graph.diff)
         // check if dragNode
@@ -60,8 +61,8 @@ module.exports = (state, bus) => {
     }
 
     // update drag state
-    function dragState(e, graph) {
-        const {dragGraph} = e
+    function dragState(obj, graph) {
+        const {dragGraph} = obj
         const diff = vec.sub(graph.mouse, graph.offset)
         return dragGraph
             ? {...graph, diff, dragGraph, mouseBeforeDrag: graph.mouse}
@@ -69,7 +70,7 @@ module.exports = (state, bus) => {
     }
 
     // unselect everything
-    function unselectAll(e, graph) {
+    function unselectAll(_obj, graph) {
         const dist = vec.dist(graph.mouse, graph.mouseBeforeDrag)
         return dist > 5
             ? graph
@@ -79,7 +80,7 @@ module.exports = (state, bus) => {
     // NODES
 
     // create a node
-    function createNode(e, graph) {
+    function createNode(_obj, graph) {
         const {nodes} = graph
         const id = idgen()
         const node = {
@@ -91,8 +92,8 @@ module.exports = (state, bus) => {
     }
 
     // select node
-    function selectNode(e, graph) {
-        const selectedNode = e.id
+    function selectNode(obj, graph) {
+        const selectedNode = obj.id
         const dist = vec.dist(graph.mouse, graph.mouseBeforeDrag)
         return dist > 5
             ? graph
@@ -107,12 +108,12 @@ module.exports = (state, bus) => {
     }
 
     // on start drag node
-    function dragNode(e, graph) {
-        return {...graph, dragNode: e.id, mouseBeforeDrag: graph.mouse}
+    function dragNode(obj, graph) {
+        return {...graph, dragNode: obj.id, mouseBeforeDrag: graph.mouse}
     }
 
     // on release node
-    function releaseNode(e, graph) {
+    function releaseNode(_obj, graph) {
         return {...graph, dragNode: null}
     }
 
