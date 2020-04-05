@@ -14,6 +14,7 @@
   "dependencies": {
     "choo": "^7.1.0",
     "ramda": "^0.27.0",
-    "vec-la": "^1.5.0"
+    "vec-la": "^1.5.0",
+    "xstate": "^4.8.0"
   }
 }

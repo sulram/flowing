@@ -1,5 +1,5 @@
 const html = require('choo/html')
-const editor = require('./components/editor')
+const graph = require('./components/graph')
 
 module.exports = (state, emit) => {
 
@@ -8,7 +8,7 @@ module.exports = (state, emit) => {
 
     return html`
         <body style="background-position: ${x * lax}px ${y * lax}px">
-            ${editor(state, emit)}
+            ${graph(state, emit)}
         </body>
     `
 }

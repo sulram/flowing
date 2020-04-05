@@ -23,22 +23,22 @@ module.exports =  (state, emit) => {
     `
 
     function onDblClick (event) {
-        emit('editor:dblclick', {event})
+        emit('graph:machine', {event, type: 'canvas:dblclick'})
     }
 
     function onClick (event) {
-        emit('editor:click', {event})
+        emit('graph:machine', {event, type: 'canvas:click'})
     }
 
     function onMouseMove(event) {
-        emit('editor:mousemove', {event})
+        emit('graph:machine', {event, type: 'canvas:mousemove'})
     }
 
     function onMouseDown(event) {
-        emit('editor:dragstate', {event, dragGraph: true})
+        emit('graph:machine', {event, type: 'canvas:mousedown'})
     }
 
     function onMouseUp(event) {
-        emit('editor:dragstate', {event, dragGraph: false})
+        emit('graph:machine', {event, type: 'canvas:mouseup'})
     }
 }

@@ -4,11 +4,11 @@ module.exports = (state, node, emit) => {
 
     const [x,y] = node.pos
     const {id, title} = node
-    const {selectedNode,dragNode} = state.graph
+    const {selectedNode,draggedNode} = state.graph
     const classes = [
         'node',
         id === selectedNode ? 'node-selected' : null,
-        id === dragNode ? 'node-dragged' : null
+        id === draggedNode ? 'node-dragged' : null
     ]
     .filter(el => el != null)
     .join(" ")
@@ -33,21 +33,21 @@ module.exports = (state, node, emit) => {
 
     function onMouseDown(event) {
         event.stopPropagation()
-        emit('node:mousedown', {event, id})
+        emit('graph:machine', {event, id, type: 'node:mousedown'})
     }
 
     function onMouseUp(event) {
         event.stopPropagation()
-        emit('node:mouseup', {event, id})
+        emit('graph:machine', {event, id, type: 'node:mouseup'})
     }
 
     function onClick(event) {
         event.stopPropagation()
-        emit('node:click', {event, id})
+        emit('graph:machine', {event, id, type: 'node:click'})
     }
 
     function onDblClick(event) {
         event.stopPropagation()
-        emit('node:dblclick', {event, id})
+        emit('graph:machine', {event, id, type: 'node:dblclick'})
     }
 }

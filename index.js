@@ -1,20 +1,20 @@
-// choo
+// load choo
 var choo = require('choo')
 
-// models
-var graph = require('./app/stores/graph')
+// load stores
+var graphStore = require('./app/stores/graph-store')
 
-// load main view
-var mainView = require('./app/view/main')
+// load editor view
+var editor = require('./app/view/editor')
 
 // initialize choo
 var app = choo()
 
-// app stores
-app.use(graph)
+// initialize app stores
+app.use(graphStore)
 
 // create routes
-app.route('/', mainView)
+app.route('/', editor)
 
 // start app
 app.mount('body')
