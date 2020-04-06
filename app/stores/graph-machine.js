@@ -65,6 +65,9 @@ const MachineConfig = {
                 },
                 'canvas:mouseup': {
                     target: 'IDLE',
+                },
+                'node:mouseup': {
+                    target: 'IDLE',
                 }
             }
         },
