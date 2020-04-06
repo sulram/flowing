@@ -2,6 +2,7 @@ const R = require('ramda')
 const vec = require('vec-la')
 const mtx = vec.matrixBuilder()
 const { createMachine, assign } = require('xstate')
+const { findNode, findNodeIndex } = require('../util')
 
 // initial context
 const context = {
@@ -10,6 +11,7 @@ const context = {
     diff:   [0,0], // diff mouse-canvas for dragging
     draggedNode:  null, // node id
     selectedNode: null, // node id
+    selectedChoice: null,
     nodes: [] // nodes array
 }
 
@@ -34,6 +36,13 @@ const MachineConfig = {
                 'node:mousedown': {
                     target: 'NODE_HOLD',
                     actions: ['updateDiff','holdNode']
+                },
+                'choice:mousedown': {
+                    target: 'CHOICE_CONNECT',
+                    actions: ['choiceHold']
+                },
+                'inspector:addChoice': {
+                    actions: ['addNodeChoice']
                 }
             }
         },
@@ -81,6 +90,25 @@ const MachineConfig = {
                     actions: ['releaseNode']
                 }
             }
+        },
+        CHOICE_CONNECT: {
+            on: {
+                'canvas:mousemove': {
+                    actions: ['updateMouse']
+                },
+                'canvas:mouseup': {
+                    target: 'IDLE',
+                    actions: ['releaseChoice']
+                },
+                'node:mouseup': {
+                    target: 'IDLE',
+                    actions: ['targetChoice','releaseChoice']
+                },
+                'node:inputup': {
+                    target: 'IDLE',
+                    actions: ['targetChoice','releaseChoice']
+                }
+            }
         }
     }
 }
@@ -93,19 +121,42 @@ const getDiff     = (ctx, obj) => vec.sub(ctx.mouse, ctx.offset)
 const getOffset   = (ctx, obj) => vec.sub(ctx.mouse, ctx.diff)
 const getLastNode = (ctx, obj) => R.last(ctx.nodes).id
 const centerNode  = (ctx, obj) => vec.transform(getDiff(ctx, obj), mtx.translate(-20, -20).get())
+const choiceModel = {
+    text: 'ok',
+    target: null
+}
 const createNode  = (ctx, obj) => {
     const id = idgen()
     const node = {
         id,
         title: 'node',
-        pos: centerNode(ctx,obj)
+        pos: centerNode(ctx,obj),
+        choices: [choiceModel]
     }
     return [...ctx.nodes, node]
 }
 const dragNode = (ctx, obj) => {
-    const index = R.findIndex(R.propEq('id', ctx.draggedNode))(ctx.nodes)
+    const index = findNodeIndex(ctx.draggedNode,ctx.nodes)
     const node = {...ctx.nodes[index], pos: centerNode(ctx,obj)}
-    return R.update(index, node, ctx.nodes);
+    return R.update(index, node, ctx.nodes)
+}
+const selectedChoice  = (ctx, obj) => {
+    return {id: obj.id, index: obj.index}
+}
+const addNodeChoice = (ctx, obj) => {
+    const index = findNodeIndex(obj.id,ctx.nodes)
+    const node = {...ctx.nodes[index], choices: [...ctx.nodes[index].choices, choiceModel] }
+    return R.update(index, node, ctx.nodes)
+}
+const targetChoice = (ctx, obj) => {
+    if(obj.id !== ctx.selectedChoice.id) {
+        const {id, index} = ctx.selectedChoice
+        const nodeIndex = findNodeIndex(id,ctx.nodes)
+        const node = ctx.nodes[nodeIndex]
+        const choices = R.update(index, {...node.choices[index], target: obj.id}, node.choices)
+        return R.update(nodeIndex, {...node, choices }, ctx.nodes);
+    }
+    return ctx.nodes
 }
 
 // machine options & actions
@@ -121,6 +172,10 @@ const MachineOptions = {
         holdNode:       assign({draggedNode: getID}),
         dragNode:       assign({nodes: dragNode}),
         releaseNode:    assign({draggedNode: null}),
+        choiceHold:     assign({selectedChoice: selectedChoice}),
+        releaseChoice:  assign({selectedChoice: null }),
+        addNodeChoice:  assign({nodes: addNodeChoice}),
+        targetChoice:   assign({nodes: targetChoice}),
     }
 }
 

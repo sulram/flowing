@@ -1,41 +1,30 @@
 /* Styles */
 
-/* Riven override */
+#inspector {
+    background: rgba(10,10,10,0.5);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #fff;
+    padding: 20px;
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 300px;
+    z-index: -1;
+}
 
-svg#riven g#nodes g.node .glyph,
-svg#riven g#nodes g.node text {
-    pointer-events: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
+body.IDLE #inspector {
+    z-index: 1;
+}
+
+#inspector pre {
+    font-family: 'input_mono_regular';
     user-select: none;
 }
 
-svg#riven g#nodes g.node.node-selected rect,
-svg#riven g#nodes g.node.node-dragged rect {
-    fill:white;
-    cursor: hand;
+#inspector a {
+    text-decoration: none;
 }
 
-svg#riven g#nodes g.node.node-selected path.glyph,
-svg#riven g#nodes g.node.node-dragged path.glyph {
-    stroke:#000;
-    stroke-width:12;
-}
-
-svg#riven g#nodes g.node circle {
-    r: 40;
-    stroke-width: 1;
-    stroke: white;
-    fill: none;
-    opacity: 0;
-    transition: all 0.5s;
-    stroke-dasharray: 20,5;
-    stroke-dashoffset: 250;
-    animation: dash 20s linear infinite;
-}
-
-svg#riven g#nodes g.node.node-selected circle {
-    r: 80;
-    opacity: 1;
+#inspector a:hover {
+    text-decoration: underline;
 }

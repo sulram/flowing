@@ -27,8 +27,8 @@ svg#riven g#nodes g.node text { text-anchor: start; stroke:none; font-family: 'i
 svg#riven g#nodes g.node.mesh rect { stroke:var(--f_low); fill:none; }
 svg#riven g#nodes g.node .glyph { stroke-width:10; stroke:#fff; }
 svg#riven g#nodes g.node rect { stroke:white; fill:black; stroke-width:1; }
-svg#riven g#nodes g.node:hover rect { fill:white; cursor: hand; }
-svg#riven g#nodes g.node:hover path.glyph { stroke:#000; stroke-width:12; }
+/* svg#riven g#nodes g.node:hover rect { fill:white; cursor: hand; } */
+/* svg#riven g#nodes g.node:hover path.glyph { stroke:#000; stroke-width:12; } */
 svg#riven g#nodes g.node.meshnode rect {fill:none; stroke:var(--f_low); stroke-width:2;}
 svg#riven g#nodes g.node.meshnode .port { display: none; }
 
@@ -48,3 +48,54 @@ svg#riven g#routes path.route.output { stroke:var(--f_high); stroke-dasharray: 2
 svg#riven g#routes path.route.bidirectional { stroke-dasharray: 10,5; stroke-dashoffset: 200; animation: dash 20s linear infinite;  }
 
 @keyframes dash { to { stroke-dashoffset: 0;} }
+
+/* Riven override */
+
+svg#riven g#nodes g.node .glyph,
+svg#riven g#nodes g.node text {
+    pointer-events: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+svg#riven g#nodes g.node.node-selected rect,
+svg#riven g#nodes g.node.node-dragged rect {
+    fill:white;
+    cursor: hand;
+}
+
+svg#riven g#nodes g.node.node-selected path.glyph,
+svg#riven g#nodes g.node.node-dragged path.glyph {
+    stroke:#000;
+    stroke-width:12;
+}
+
+svg#riven g#nodes g.node circle {
+    r: 40;
+    stroke-width: 1;
+    stroke: white;
+    fill: none;
+    opacity: 0;
+    transition: all 0.5s;
+    stroke-dasharray: 20,5;
+    stroke-dashoffset: 250;
+    animation: dash 20s linear infinite;
+}
+
+svg#riven g#nodes g.node.node-selected circle {
+    r: 80;
+    opacity: 1;
+}
+
+svg#riven g#nodes g.node .node-rect:hover rect { fill:white; cursor: hand; }
+svg#riven g#nodes g.node .node-rect:hover path.glyph { stroke:#000; stroke-width:12; }
+
+svg#riven g#nodes g.node g.port polygon { fill:var(--background); stroke: var(--f_high); stroke-width: var(--stroke);}
+
+svg#riven g#nodes g.node g.port polygon:hover,
+svg#riven g#nodes g.node g.port.selected polygon {
+  stroke-width: 3;
+  fill:var(--f_high);
+}
