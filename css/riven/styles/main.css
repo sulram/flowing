@@ -51,6 +51,14 @@ svg#riven g#routes path.route.bidirectional { stroke-dasharray: 10,5; stroke-das
 
 /* Riven override */
 
+svg#riven g#nodes g.node {
+  transition: 200ms;
+}
+
+svg#riven g#routes path.flow {
+  transition: 200ms;
+}
+
 svg#riven g#nodes g.node .glyph,
 svg#riven g#nodes g.node text {
     pointer-events: none;
@@ -60,8 +68,8 @@ svg#riven g#nodes g.node text {
     user-select: none;
 }
 
-svg#riven g#nodes g.node.node-selected rect,
-svg#riven g#nodes g.node.node-dragged rect {
+svg#riven g#nodes g.node.node-selected .node-rect rect,
+svg#riven g#nodes g.node.node-dragged .node-rect rect {
     fill:white;
     cursor: hand;
 }
@@ -72,8 +80,10 @@ svg#riven g#nodes g.node.node-dragged path.glyph {
     stroke-width:12;
 }
 
-svg#riven g#nodes g.node circle {
-    r: 40;
+svg#riven g#nodes g.node .focus {
+    width: 60px;
+    height: 60px;
+    transform: translate(-10px,-10px);
     stroke-width: 1;
     stroke: white;
     fill: none;
@@ -84,9 +94,11 @@ svg#riven g#nodes g.node circle {
     animation: dash 20s linear infinite;
 }
 
-svg#riven g#nodes g.node.node-selected circle {
-    r: 80;
+svg#riven g#nodes g.node.node-selected .focus {
     opacity: 1;
+    width: 50px;
+    height: 50px;
+    transform: translate(-5px,-5px);
 }
 
 svg#riven g#nodes g.node .node-rect:hover rect { fill:white; cursor: hand; }
@@ -99,3 +111,5 @@ svg#riven g#nodes g.node g.port.selected polygon {
   stroke-width: 3;
   fill:var(--f_high);
 }
+
+svg#riven g#routes path.route.flow { stroke: var(--f_med); stroke-dasharray: 0,5; stroke-dashoffset: 250; animation: dash 20s linear infinite; }

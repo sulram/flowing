@@ -6,8 +6,10 @@ const mtx = vec.matrixBuilder()
 const {choiceGetY, findNode, mapIndexed} = require('../../util')
 
 // draw svg path
-const svgpath = (a,b, classes) => {
-    return html`<path class="route ${classes}" d="M ${a.join(' ')} L ${b.join(' ')}">`
+const svgpath = (a, b, id, classes) => {
+    const c1 = transPos(a, 40, 0)
+    const c2 = transPos(b, -40, 0)
+    return html`<path id="${id}" class="route ${classes}" d="M ${a.join(' ')} C ${c1.join(' ')}, ${c2.join(' ')}, ${b.join(' ')}">`
 }
 
 // transform position
@@ -17,23 +19,24 @@ module.exports =  (state, emit) => {
 
     const {mouse, offset, selectedChoice, nodes} = state.graph
 
-    // flatten all choices
-    const flatChoices = (id) => mapIndexed((val, index) => {
-        const {target} = val
-        return { id, index, target }
-    })
-
-    // filter choices without target
-    const hasTarget = R.reject(R.propEq('target', null))
-
-    // filter choice that is on hold
-    const notSelected = (selected) => R.reject((choice) => {
-        return selected !== null
-            && choice.id === selected.id
-            && choice.index === selected.index
-    })
-
     const filterRoutes = (acc, node) => {
+
+        // flatten all choices
+        const flatChoices = (id) => mapIndexed((val, index) => {
+            const {target} = val
+            return { id, index, target }
+        })
+
+        // filter choices without target
+        const hasTarget = R.reject(R.propEq('target', null))
+
+        // filter choice that is on hold
+        const notSelected = (selected) => R.reject((choice) => {
+            return selected !== null
+                && choice.id === selected.id
+                && choice.index === selected.index
+        })
+
         return [
             ...acc,
             ...R.pipe(
@@ -55,6 +58,7 @@ module.exports =  (state, emit) => {
         return svgpath(
             transPos(from.pos, 42, 25 + fromY),
             vec.sub(mouse, offset),
+            'route-selected',
             'output'
         )
     } 
@@ -64,7 +68,9 @@ module.exports =  (state, emit) => {
         const to = findNode(route.target, nodes)
         return svgpath(
             transPos(from.pos, 42, 25 + fromY),
-            transPos(to.pos, -2, 20)
+            transPos(to.pos, -2, 20),
+            `route-${route.id}-${route.index}-${route.target}`,
+            'flow'
         )
     })
 

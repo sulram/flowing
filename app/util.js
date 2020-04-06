@@ -1,7 +1,7 @@
 const R = require('ramda')
 
-const choiceGetY = (n, i) => {
-    const step = 8
+const choiceGetY = (n, i, step) => {
+    step = step || 8
     return n * - 0.5 * step + i * step
 }
 

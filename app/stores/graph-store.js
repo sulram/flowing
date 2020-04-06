@@ -21,6 +21,9 @@ module.exports = (state, bus) => {
     
     // listen choo nanobus messages
     // and send them to machine service
-    bus.on('graph:machine', obj => service.send(obj))
+    bus.on('graph:machine', obj => {
+        console.log(obj)
+        service.send(obj)
+    })
 
 }

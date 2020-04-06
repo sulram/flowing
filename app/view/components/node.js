@@ -1,5 +1,7 @@
 const html = require('choo/html')
 
+const {choiceGetY} = require('../../util')
+
 module.exports = (state, node, emit) => {
 
     const [x,y] = node.pos
@@ -15,8 +17,7 @@ module.exports = (state, node, emit) => {
 
     const numChoices = node.choices.length-1
     const choices = node.choices.map((el,i) => {
-        const step = 8
-        const y = numChoices * - 0.5 * step + i * step
+        const y = choiceGetY(numChoices, i)
         const selected = state.graph.selectedChoice
             && state.graph.selectedChoice.id === id
             && state.graph.selectedChoice.index === i
@@ -40,6 +41,7 @@ module.exports = (state, node, emit) => {
             ondblclick="${onDblClick}"
             onclick="${onClick}"
         >
+            <rect class="focus" rx="4" ry="4"/>
             <g class="node-rect">
                 <rect rx="2" ry="2" width="40" height="40" class="fill"
                     onmousedown="${onMouseDown}"
@@ -47,7 +49,6 @@ module.exports = (state, node, emit) => {
                 />
                 <path class="glyph" transform="translate(5,5) scale(0.1)" d="M65,65 L65,65 L245,65 M65,125 L65,125 L245,125 M65,185 L65,185 L245,185 M65,245 L65,245 L245,245"/>
             </g>
-            <circle cx="20" cy="20"/>
             <text x="10" y="55">${title}_${id}</text>
             <g class="port in" transform="translate(-20,0)">
                 <polygon onmousedown="${onInputDown}" onmouseup="${onInputUp}" points="17 20.3333333 20.3333333 17 23.6666667 20.3333333 20.3333333 23.6666667"/>
@@ -62,7 +63,7 @@ module.exports = (state, node, emit) => {
     }
 
     function onMouseUp(event) {
-        event.stopPropagation()
+        // event.stopPropagation()
         emit('graph:machine', {event, id, type: 'node:mouseup'})
     }
 
@@ -85,13 +86,13 @@ module.exports = (state, node, emit) => {
 
     function onChoiceMouseUp(index) {
         return (event) => {
-            event.stopPropagation()
+            // event.stopPropagation()
             emit('graph:machine', {event, id, index, type: 'choice:mouseup'})
         }
     }
 
     function onInputUp(event) {
-        event.stopPropagation()
+        // event.stopPropagation()
         emit('graph:machine', {event, id, type: 'node:inputup'})
     }
 

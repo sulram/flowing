@@ -66,9 +66,6 @@ const MachineConfig = {
                 'canvas:mouseup': {
                     target: 'IDLE',
                 },
-                'node:mouseup': {
-                    target: 'IDLE',
-                }
             }
         },
         NODE_HOLD: {
@@ -88,20 +85,16 @@ const MachineConfig = {
                 'canvas:mousemove': {
                     actions: ['updateMouse','dragNode']
                 },
-                'node:mouseup': {
+                'canvas:mouseup': {
                     target: 'IDLE',
                     actions: ['releaseNode']
-                }
+                },
             }
         },
         CHOICE_CONNECT: {
             on: {
                 'canvas:mousemove': {
                     actions: ['updateMouse']
-                },
-                'canvas:mouseup': {
-                    target: 'IDLE',
-                    actions: ['releaseChoice']
                 },
                 'node:mouseup': {
                     target: 'IDLE',
@@ -110,7 +103,11 @@ const MachineConfig = {
                 'node:inputup': {
                     target: 'IDLE',
                     actions: ['targetChoice','releaseChoice']
-                }
+                },
+                'canvas:mouseup': {
+                    target: 'IDLE',
+                    actions: ['releaseChoice']
+                },
             }
         }
     }
@@ -124,6 +121,10 @@ const getDiff     = (ctx, obj) => vec.sub(ctx.mouse, ctx.offset)
 const getOffset   = (ctx, obj) => vec.sub(ctx.mouse, ctx.diff)
 const getLastNode = (ctx, obj) => R.last(ctx.nodes).id
 const centerNode  = (ctx, obj) => vec.transform(getDiff(ctx, obj), mtx.translate(-20, -20).get())
+const snapPos     = (pos, snap) => {
+    snap = snap || 64
+    return [Math.floor(pos[0] / snap) * snap, Math.floor(pos[1] / snap) * snap]
+}
 const choiceModel = {
     text: 'ok',
     target: null
@@ -133,14 +134,15 @@ const createNode  = (ctx, obj) => {
     const node = {
         id,
         title: 'node',
-        pos: centerNode(ctx,obj),
+        pos: snapPos(getDiff(ctx,obj)),
         choices: [choiceModel]
     }
     return [...ctx.nodes, node]
 }
 const dragNode = (ctx, obj) => {
     const index = findNodeIndex(ctx.draggedNode,ctx.nodes)
-    const node = {...ctx.nodes[index], pos: centerNode(ctx,obj)}
+    const pos = snapPos(getDiff(ctx,obj))
+    const node = {...ctx.nodes[index], pos}
     return R.update(index, node, ctx.nodes)
 }
 const selectedChoice  = (ctx, obj) => {
